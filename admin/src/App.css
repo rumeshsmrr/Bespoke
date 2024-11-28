@@ -1,0 +1,22 @@
+#root {
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* background-color: #161616; */
+  /* font-family: "primaryFont", serif; */
+  /* letter-spacing: 2px; */
+}
+a,
+button,
+div,
+input {
+  cursor: none;
+}
+.custom-cursor {
+  transition: transform 0.15s ease-out, background-color 0.2s;
+}
