@@ -1,6 +1,5 @@
 # Writing the README.md content to a file
 
-readme_content = """
 
 # Web Minds Software Solution
 
@@ -92,8 +91,3 @@ Make sure you have the following installed:
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/web-minds/your-repo-name.git
-   cd your-repo-name
-   ```
