@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "primaryFont";
+  src: url("../src/assets/Fonts/Olivera_Demo.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}

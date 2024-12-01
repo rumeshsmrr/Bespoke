@@ -10,6 +10,9 @@ export default {
           200: "#EBE2DB",
         },
       },
+      fontFamily: {
+        primaryFont: ["primaryFont", "serif"],
+      },
     },
   },
   plugins: [],
