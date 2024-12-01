@@ -1,5 +1,6 @@
 const express = require("express");
 const productsRoute = require("./Routes/ProductRoute");
+const cart = require("./Routes/CartRoute");
 
 module.exports = (app) => {
   app.use(express.json()); // Middleware to parse JSON
@@ -10,5 +11,6 @@ module.exports = (app) => {
   });
 
   // Product routes
-  app.use("/api/products", productsRoute);
+  app.use("/api/v1/products", productsRoute);
+  app.use("/api/v1/cart", cart);
 };
