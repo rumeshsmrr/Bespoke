@@ -1,5 +1,5 @@
 const Product = require("../Models/Product");
-const cloudinary = require("../utils/cloudinary");
+const cloudinary = require("../config/cloudinary");
 
 // Create Product with Multiple Images
 const createProduct = async (req, res) => {
