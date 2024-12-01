@@ -2,9 +2,9 @@ const Product = require("../Models/Product");
 const cloudinary = require("../config/cloudinary");
 
 // Create Product with Multiple Images
-const createProduct = async (req, res) => {
+exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, category } = req.body;
+    const { name, description, price, category, stoke } = req.body;
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "No images uploaded" });
@@ -25,7 +25,20 @@ const createProduct = async (req, res) => {
       price,
       category,
       images: uploadedImages,
+      stoke,
     });
+
+    try {
+      await product.save();
+    } catch (error) {
+      // If saving the product fails, remove the uploaded images from Cloudinary
+      await Promise.all(
+        uploadedImages.map(async (image) => {
+          await cloudinary.uploader.destroy(image.public_id);
+        })
+      );
+      throw error; // Re-throw the error to be caught by the outer catch block
+    }
 
     await product.save();
     res.status(201).json({ message: "Product created successfully", product });
@@ -36,7 +49,7 @@ const createProduct = async (req, res) => {
 };
 
 // Delete Product with Multiple Images
-const deleteProduct = async (req, res) => {
+exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -63,7 +76,7 @@ const deleteProduct = async (req, res) => {
 };
 
 // Get All Products
-const getProducts = async (req, res) => {
+exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
     res.status(200).json(products);
@@ -73,8 +86,29 @@ const getProducts = async (req, res) => {
   }
 };
 
-module.exports = {
-  createProduct,
-  getProducts,
-  deleteProduct,
+//get single product
+exports.getSingleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).json({ message: error.message || "Internal server error" });
+  }
 };
+
+// Update Product
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price, category, stoke } = req.body;
+
+    const product = await Product.findById
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+}
