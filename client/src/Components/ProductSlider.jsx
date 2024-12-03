@@ -1,49 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import PropTypes from "prop-types";
 
-// Mock Product Data
-const recommendedProducts = [
-  {
-    id: 1,
-    image: "https://via.placeholder.com/300",
-    name: "Spoon back chairs",
-    price: "$150",
-  },
-  {
-    id: 2,
-    image: "https://via.placeholder.com/300",
-    name: "Octagonal Moorish side table",
-    price: "$150",
-  },
-  {
-    id: 3,
-    image: "https://via.placeholder.com/300",
-    name: "Lions head stool",
-    price: "$150",
-  },
-  {
-    id: 4,
-    image: "https://via.placeholder.com/300",
-    name: "Round coffee table",
-    price: "$200",
-  },
-  {
-    id: 5,
-    image: "https://via.placeholder.com/300",
-    name: "Minimalist desk",
-    price: "$250",
-  },
-  {
-    id: 6,
-    image: "https://via.placeholder.com/300",
-    name: "Elegant lounge chair",
-    price: "$300",
-  },
-];
-
 export default function ProductSlider({ category }) {
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchRecommendedProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5002/api/v1/products/category/${category}`
+        );
+        const data = await response.json();
+        setRecommendedProducts(data); // Ensure API returns "products" array
+
+        console.log("Recommended products:", data);
+      } catch (error) {
+        console.error("Error fetching recommended products:", error);
+      }
+    };
+
+    fetchRecommendedProducts();
+  }, [category]);
 
   // Group products into slides of 3 items
   const slides = [];
@@ -91,16 +70,19 @@ export default function ProductSlider({ category }) {
               >
                 {slide.map((product) => (
                   <div
-                    key={product.id}
+                    key={product._id}
                     className="flex flex-col items-center p-4 w-64"
                   >
                     <img
-                      src={product.image}
+                      src={
+                        product.images[0]?.url ||
+                        "https://via.placeholder.com/300"
+                      } // Fix: Access the first image URL properly
                       alt={product.name}
                       className="rounded-lg w-64 h-64 object-cover mb-4"
                     />
                     <h3 className="text-lg font-semibold">{product.name}</h3>
-                    <p className="text-xl font-bold">{product.price}</p>
+                    <p className="text-xl font-bold">${product.price}</p>
                   </div>
                 ))}
               </div>
@@ -120,6 +102,6 @@ export default function ProductSlider({ category }) {
   );
 }
 
-PropTypes.ProductSlider = {
-  category: PropTypes.string,
+ProductSlider.propTypes = {
+  category: PropTypes.string.isRequired,
 };
