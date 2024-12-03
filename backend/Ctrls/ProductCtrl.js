@@ -127,11 +127,28 @@ exports.updateProduct = async (req, res) => {
 };
 
 //product by category
-exports.getProductByCategory = async (req, res) => {
+exports.getSuggestedProducts = async (req, res) => {
   try {
     const { category } = req.params;
-    const products = await Product.find({ category });
-    res.status(200).json(products);
+
+    // Find products related to the specified category
+    const relatedProducts = await Product.find({ category }).limit(6);
+
+    if (relatedProducts.length >= 6) {
+      // If 6 or more related products are found, return them
+      return res.status(200).json(relatedProducts);
+    }
+
+    // If fewer than 6 related products, fetch additional products from other categories
+    const remainingCount = 6 - relatedProducts.length;
+    const otherProducts = await Product.find({
+      category: { $ne: category },
+    }).limit(remainingCount);
+
+    // Combine related products and other products
+    const combinedProducts = [...relatedProducts, ...otherProducts];
+
+    res.status(200).json(combinedProducts);
   } catch (error) {
     console.error("Error fetching products by category:", error);
     res.status(500).json({ message: error.message || "Internal server error" });
