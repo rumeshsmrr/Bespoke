@@ -10,7 +10,7 @@ export default function ProductSlider({ category }) {
     const fetchRecommendedProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5002/api/v1/products/category/${category}`
+          `http://localhost:5002/api/v1/products/Suggestion/${category}`
         );
         const data = await response.json();
         setRecommendedProducts(data); // Ensure API returns "products" array
