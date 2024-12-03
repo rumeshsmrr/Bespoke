@@ -49,7 +49,7 @@ export default function ProductCard({ products }) {
       {products.map((product, index) => (
         <div
           key={index}
-          className="relative  rounded-lg overflow-hidden bg-white"
+          className="relative  rounded-lg overflow-hidden bg-secondary-100"
           style={{
             gridColumn: `span ${product.colSpan}`,
             gridRow: `span ${product.rowSpan}`,
@@ -60,7 +60,7 @@ export default function ProductCard({ products }) {
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover cursor-pointer"
+              className="w-full h-full object-cover cursor-pointer transition duration-300 ease-in-out hover:opacity-50"
             />
           </Link>
 
