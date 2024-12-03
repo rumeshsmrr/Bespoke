@@ -4,6 +4,7 @@ const {
   getProducts,
   deleteProduct,
   getSingleProduct,
+  getProductByCategory,
 } = require("../Ctrls/ProductCtrl");
 const upload = require("../utils/multer");
 
@@ -20,5 +21,8 @@ router.delete("/:id", deleteProduct);
 
 // Get Single Product
 router.get("/:id", getSingleProduct);
+
+//get product by category
+router.get("/category/:category", getProductByCategory);
 
 module.exports = router;
