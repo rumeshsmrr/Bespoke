@@ -1,39 +1,37 @@
-import React, { useState } from "react";
-
-import img12 from "../assets/images/img12.png";
-import img13 from "../assets/images/img13.png";
-import img14 from "../assets/images/img14.png";
-import { Link } from "react-router-dom";
-
-// Mock product data
-const productData = {
-  name: "Soane Britain - Rattan Chair",
-  description:
-    "The Carousel Drawer is a stunning example of craftsmanship and timeless design. Handmade in our dedicated rattan atelier, each piece showcases meticulous attention to detail.",
-  price: 350,
-  category: "chair",
-  stoke: 3,
-  images: [
-    {
-      url: img12,
-      public_id: "soane_britain_rattan_chair_main",
-    },
-    {
-      url: img13,
-      public_id: "soane_britain_rattan_chair_thumb1",
-    },
-    {
-      url: img14,
-      public_id: "soane_britain_rattan_chair_thumb2",
-    },
-  ],
-  createdAt: "2024-12-01T10:00:00.000Z",
-};
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { Link, useParams } from "react-router-dom";
 
 export default function ProductDescription() {
-  const [mainImage, setMainImage] = useState(productData.images[0].url); // State for the main image
+  const { id } = useParams(); // Get product ID from the route parameters
+
+  console.log("id", id);
+  const [productData, setProductData] = useState(null); // State to hold the product data
+  const [mainImage, setMainImage] = useState(""); // State for the main image
   const [zoomStyle, setZoomStyle] = useState({}); // State for zoom effect
   const [quantity, setQuantity] = useState(1); // State for product quantity
+  const [loading, setLoading] = useState(true); // State for loading
+
+  // Fetch product by ID
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5002/api/v1/products/${id}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setProductData(data); // Set fetched product data
+        setMainImage(data.images?.[0]?.url || ""); // Set the main image to the first image in the array
+        setLoading(false); // Stop loading
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setLoading(false); // Stop loading even if there is an error
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleThumbnailClick = (image) => {
     setMainImage(image);
@@ -56,6 +54,22 @@ export default function ProductDescription() {
   const handleMouseLeave = () => {
     setZoomStyle({});
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!productData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Product not found.
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -89,7 +103,7 @@ export default function ProductDescription() {
           </div>
           {/* Thumbnails */}
           <div className="flex justify-start w-full gap-4 mt-4">
-            {productData.images.map((image, index) => (
+            {productData.images?.map((image, index) => (
               <img
                 key={index}
                 src={image.url}
@@ -107,7 +121,7 @@ export default function ProductDescription() {
 
         {/* Right Section: Product Details */}
         <div className="flex flex-col">
-          <div className="flex flex-col  bg-secondary-200 p-8 rounded-xl">
+          <div className="flex flex-col bg-secondary-200 p-8 rounded-xl">
             <h1 className="text-4xl font-bold text-secondary-100 mb-4">
               {productData.name}
             </h1>
@@ -120,11 +134,6 @@ export default function ProductDescription() {
               <span className="text-secondary-100 font-semibold">
                 Available:
               </span>
-              {/* <span 
-              {productData.stoke > 0 ? "In stock" : "Out of stock"}
-              className="ml-2 text-green-500 font-semibold">
-                {productData.stoke > 0 ? "In stock" : "Out of stock"}
-              </span> */}
               {productData.stoke > 0 ? (
                 <span className="ml-2 text-green-500 font-semibold">
                   In stock
@@ -183,3 +192,7 @@ export default function ProductDescription() {
     </div>
   );
 }
+
+ProductDescription.propTypes = {
+  productID: PropTypes.string,
+};

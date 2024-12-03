@@ -23,7 +23,7 @@ export default function ProductCard({ products }) {
           }}
         >
           {/* Product Image */}
-          <Link to="/product-description">
+          <Link to={`/product-description/${product._id}`}>
             <img
               src={product.image}
               alt={product.name}
