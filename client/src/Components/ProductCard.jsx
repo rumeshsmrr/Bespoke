@@ -4,6 +4,39 @@ import { FaPlusCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ products }) {
+  const userId = "64c1e13e59f08b002c8e4b5a";
+  const handleAddToCart = async (product) => {
+    try {
+      // API request body
+      const requestBody = {
+        userId, // Hardcoded userId
+        productId: product._id,
+        quantity: 1, // Default quantity
+      };
+
+      // API call
+      const response = await fetch("http://localhost:5002/api/v1/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      // Handle response
+      if (response.ok) {
+        alert(data.message || "Product added to cart successfully.");
+      } else {
+        alert(data.message || "An error occurred. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
   return (
     <div
       className="w-full grid gap-8  p-4"
@@ -23,7 +56,7 @@ export default function ProductCard({ products }) {
           }}
         >
           {/* Product Image */}
-          <Link to="/product-description">
+          <Link to={`/product-description/${product._id}`}>
             <img
               src={product.image}
               alt={product.name}
@@ -40,7 +73,10 @@ export default function ProductCard({ products }) {
 
             {/* Icon */}
             <div className="bg-white p-2 w-16 h-16 rounded-tl-2xl absolute right-0 bottom-0 shadow-lg cursor-pointer flex justify-center items-center">
-              <div className="bg-secondary-100 w-10 h-10 absolute rounded-md flex items-center justify-center">
+              <div
+                className="bg-secondary-100 w-10 h-10 absolute rounded-md flex items-center justify-center"
+                onClick={() => handleAddToCart(product)}
+              >
                 <FaPlusCircle className="text-white text-xl m-auto " />
               </div>
               <div className="absolute -top-6 right-0">

@@ -1,143 +1,91 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
-import img12 from "../assets/images/img12.png";
-import img13 from "../assets/images/img13.png";
-import img14 from "../assets/images/img14.png";
-import img19 from "../assets/images/img19.png";
-
-const products = [
-  {
-    image: img12,
-    name: "The Windsor Chair",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img13,
-    name: "The Windsor Drawer .",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img14,
-    name: "Baroque Empress Couch",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img19,
-    name: "Legacy Rattan Couch",
-    price: "$250",
-    colSpan: 2,
-    rowSpan: 2,
-  },
-  {
-    image: img13,
-    name: "Solace Companion Table",
-    price: "$200",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img12,
-    name: "Teak 3-Seater Sofa Rattan",
-    price: "$400",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img12,
-    name: "Teak 3-Seater Sofa Rattan",
-    price: "$400",
-    colSpan: 2,
-    rowSpan: 2,
-  },
-  {
-    image: img12,
-    name: "The Windsor Chair",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img13,
-    name: "The Windsor Drawer",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img14,
-    name: "Baroque Empress Couch",
-    price: "$250",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img19,
-    name: "Legacy Rattan Couch",
-    price: "$250",
-    colSpan: 2,
-    rowSpan: 2,
-  },
-  {
-    image: img13,
-    name: "Solace Companion Table",
-    price: "$200",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img12,
-    name: "Teak 3-Seater Sofa Rattan",
-    price: "$400",
-    colSpan: 1,
-    rowSpan: 2,
-  },
-  {
-    image: img12,
-    name: "Teak 3-Seater Sofa Rattan",
-    price: "$400",
-    colSpan: 2,
-    rowSpan: 2,
-  },
-];
-
-const filter = ["New Arrivals", "BedSide Table", "Chair"];
 
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  // Number of rows per page
-  const itemsPerPage = 7; // Since each row has 3 cards, calculate total items per page
+  const [selectedFilter, setSelectedFilter] = useState("All");
 
-  // Calculate the visible products for the current page
-  const visibleProducts = products.slice(
+  const filterOptions = ["All", "BedSide Table", "Chair"];
+  const itemsPerPage = 7; // Number of items per page
+
+  // Define colSpan and rowSpan patterns
+  const colSpanPattern = [1, 1, 1, 2, 1, 1, 2];
+  const rowSpanPattern = [2, 2, 2, 2, 2, 2, 2];
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5002/api/v1/products/");
+        const data = await response.json();
+
+        // Transform products to match desired format
+        const preparedProducts = data.map((product) => ({
+          image: product.images[0]?.url || "", // Use the first image as the main image
+          name: product.name,
+          price: `$${product.price}`,
+          category: product.category,
+          _id: product._id,
+        }));
+
+        setProducts(preparedProducts);
+        setFilteredProducts(applyGridPatterns(preparedProducts)); // Apply grid patterns here
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Reapply grid patterns after filtering
+  const applyGridPatterns = (items) => {
+    return items.map((product, index) => ({
+      ...product,
+      colSpan: colSpanPattern[index % colSpanPattern.length],
+      rowSpan: rowSpanPattern[index % rowSpanPattern.length],
+    }));
+  };
+
+  // Handle filter change
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    setCurrentPage(1); // Reset to the first page
+
+    if (filter === "All") {
+      setFilteredProducts(applyGridPatterns(products));
+    } else {
+      const filtered = products.filter((product) =>
+        product.category.toLowerCase().includes(filter.toLowerCase())
+      );
+      setFilteredProducts(applyGridPatterns(filtered));
+    }
+  };
+
+  // Calculate visible products for pagination
+  const visibleProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Calculate total pages
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
     <div className="flex flex-col w-full items-center">
+      {/* Filter Buttons */}
       <div className="flex justify-end gap-3 w-full mb-4">
-        <motion.button
-          className="px-4 py-2 bg-secondary-200 text-xl tracking-wider font-bold text-secondary-100 rounded-lg shadow-md"
-          initial={{ backgroundColor: "#EBE2DB", color: "#523B2F" }}
-          whileHover={{ backgroundColor: "#523B2F", color: "#EBE2DB" }}
-          transition={{ duration: 0.5 }}
-        >
-          All
-        </motion.button>
-        {filter.map((item) => (
+        {filterOptions.map((item) => (
           <motion.button
             key={item}
-            className="px-4 py-2 bg-secondary-200 text-xl tracking-wider font-bold text-secondary-100 rounded-lg shadow-md mr-4"
+            onClick={() => handleFilterChange(item)}
+            className={`px-4 py-2 text-xl tracking-wider font-bold rounded-lg shadow-md ${
+              selectedFilter === item
+                ? "bg-secondary-100 text-white"
+                : "bg-secondary-200 text-secondary-100"
+            }`}
             initial={{ backgroundColor: "#EBE2DB", color: "#523B2F" }}
             whileHover={{ backgroundColor: "#523B2F", color: "#EBE2DB" }}
             transition={{ duration: 0.5 }}
@@ -146,6 +94,8 @@ export default function Products() {
           </motion.button>
         ))}
       </div>
+
+      {/* Product Cards */}
       <ProductCard products={visibleProducts} />
 
       {/* Pagination Controls */}
