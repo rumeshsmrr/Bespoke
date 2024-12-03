@@ -125,3 +125,15 @@ exports.updateProduct = async (req, res) => {
     res.status(500).json({ message: error.message || "Internal server error" });
   }
 };
+
+//product by category
+exports.getProductByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    res.status(500).json({ message: error.message || "Internal server error" });
+  }
+};
