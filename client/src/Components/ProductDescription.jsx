@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import img12 from "../assets/images/img12.png";
 import img13 from "../assets/images/img13.png";
 import img14 from "../assets/images/img14.png";
+import { Link } from "react-router-dom";
 
 // Mock product data
 const productData = {
@@ -58,7 +59,7 @@ export default function ProductDescription() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="max-w-6xl bg-primary rounded-lg p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+      <div className="max-w-7xl bg-primary rounded-lg p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 ">
         {/* Left Section: Product Image and Thumbnails */}
         <div className="flex flex-col items-center">
           {/* Main Product Image */}
@@ -165,14 +166,18 @@ export default function ProductDescription() {
               </span>
             </div>
             {/* Add to Cart Button */}
-            <button className="mt-8 px-6 py-3 bg-secondary-100 text-primary font-bold rounded-lg shadow-md hover:bg-secondary-200 hover:text-secondary-100 transition">
-              Add to Cart
-            </button>
+            <Link to="/cart">
+              <button className="mt-8 px-6 py-3 bg-secondary-100 text-primary font-bold rounded-lg shadow-md hover:bg-secondary-200 hover:text-secondary-100 transition">
+                Add to Cart
+              </button>
+            </Link>
           </div>
           {/* Continue Shopping Button */}
-          <button className="mt-4 px-6 py-3 border-2 border-secondary-100 text-secondary-100 font-bold rounded-lg hover:bg-secondary-100 hover:text-primary transition">
-            Continue Shopping
-          </button>
+          <Link to="/product-list" className="w-full flex justify-end">
+            <button className="mt-4 px-6 py-3 border-2 border-secondary-100 text-secondary-100 font-bold rounded-lg hover:bg-secondary-100 hover:text-primary transition">
+              Continue Shopping
+            </button>
+          </Link>
         </div>
       </div>
     </div>
