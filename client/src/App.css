@@ -6,17 +6,54 @@
 body {
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   /* background-color: #161616; */
-  /* font-family: "primaryFont", serif; */
+  font-family: "primaryFont", serif;
   /* letter-spacing: 2px; */
 }
-a,
-button,
-div,
-input {
-  cursor: none;
+
+#curved-corner-bottomleft,
+#curved-corner-bottomright,
+#curved-corner-topleft,
+#curved-corner-topright {
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  position: relative;
 }
-.custom-cursor {
-  transition: transform 0.15s ease-out, background-color 0.2s;
+
+#curved-corner-bottomleft:before,
+#curved-corner-bottomright:before,
+#curved-corner-topleft:before,
+#curved-corner-topright:before {
+  content: "";
+  display: block;
+  width: 200%;
+  height: 200%;
+  position: absolute;
+  border-radius: 50%;
+}
+
+#curved-corner-bottomleft:before {
+  bottom: 0;
+  left: 0;
+  box-shadow: -24px 24px 0 0 #ffffff;
+}
+
+#curved-corner-bottomright:before {
+  bottom: 0;
+  right: 0;
+  box-shadow: 24px 24px 0 0 #ffffff;
+}
+
+#curved-corner-topleft:before {
+  top: 0;
+  left: 0;
+  box-shadow: -24px -24px 0 0 #ffffff;
+}
+
+#curved-corner-topright:before {
+  top: 0;
+  right: 0;
+  box-shadow: 24px -24px 0 0 #ffffff;
 }
