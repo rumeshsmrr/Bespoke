@@ -95,7 +95,7 @@ export default function HomePageProducts() {
   return (
     <div className="flex flex-col px-2 w-full items-center">
       {/* Filter Buttons */}
-      <div className="flex justify-end gap-3 w-full mb-4">
+      <div className="flex justify-end gap-3 px-4 w-full mb-4">
         <Link to="/product-list">
           <motion.button
             className="px-4 py-2 text-xl tracking-wider font-bold rounded-lg shadow-md"
