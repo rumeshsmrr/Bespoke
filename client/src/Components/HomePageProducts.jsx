@@ -93,7 +93,7 @@ export default function HomePageProducts() {
   };
 
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col px-2 w-full items-center">
       {/* Filter Buttons */}
       <div className="flex justify-end gap-3 w-full mb-4">
         <Link to="/product-list">
