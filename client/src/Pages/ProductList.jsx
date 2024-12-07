@@ -25,7 +25,7 @@ export default function ProductList() {
       <div className="w-full px-0 pt-2 pb-2 text-2xl md:text-4xl text-secondary-100 text-center">
         Each piece in our collection is meticulously handcrafted by skilled
         artisans, ensuring <br /> no two items are alike. Explore timeless
-        designs that blend tradition, craftsmanship, <br />
+        designs that blend craftsmanship, <br />
         and modern luxury.
       </div>
       <Products />
