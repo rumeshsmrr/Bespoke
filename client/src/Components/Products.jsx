@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
 
 export default function Products() {
+  const [isMobile, setIsMobile] = useState(false);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,8 +13,25 @@ export default function Products() {
   const itemsPerPage = 7; // Number of items per page
 
   // Define colSpan and rowSpan patterns
-  const colSpanPattern = [1, 1, 1, 2, 1, 1, 2];
-  const rowSpanPattern = [2, 2, 2, 2, 2, 2, 2];
+  const colSpanPatternDesktop = [1, 1, 1, 2, 1, 1, 2];
+  const rowSpanPatternDesktop = [2, 2, 2, 2, 2, 2, 2];
+
+  const colSpanPatternMobile = [2, 2, 2, 2, 2, 2];
+  const rowSpanPatternMobile = [1, 2, 1, 2, 1, 2];
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Detect mobile screens (768px breakpoint)
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Fetch products from API
   useEffect(() => {
@@ -42,7 +60,14 @@ export default function Products() {
   }, []);
 
   // Reapply grid patterns after filtering
-  const applyGridPatterns = (items) => {
+  const applyGridPatterns = (items, isMobile) => {
+    const colSpanPattern = isMobile
+      ? colSpanPatternMobile
+      : colSpanPatternDesktop;
+    const rowSpanPattern = isMobile
+      ? rowSpanPatternMobile
+      : rowSpanPatternDesktop;
+
     return items.map((product, index) => ({
       ...product,
       colSpan: colSpanPattern[index % colSpanPattern.length],
@@ -74,7 +99,7 @@ export default function Products() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col w-full p-4 items-center">
       {/* Filter Buttons */}
       <div className="flex justify-end gap-3 w-full mb-4">
         {filterOptions.map((item) => (
@@ -94,10 +119,21 @@ export default function Products() {
           </motion.button>
         ))}
       </div>
-
-      {/* Product Cards */}
-      <ProductCard products={visibleProducts} />
-
+      <div
+        className="w-full flex flex-col justify-center  md:grid gap-8 p-2 md:p-4"
+        style={
+          isMobile
+            ? { gridTemplateColumns: "1fr" }
+            : {
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridAutoRows: "150px",
+              }
+        }
+      >
+        {/* Product Cards */}
+        <ProductCard products={visibleProducts} />
+      </div>
       {/* Pagination Controls */}
       <div className="w-full pr-4 flex justify-end mt-4 gap-2">
         <button
