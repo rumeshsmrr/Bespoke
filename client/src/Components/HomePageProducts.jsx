@@ -7,12 +7,30 @@ export default function HomePageProducts() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [isMobile, setIsMobile] = useState(false);
 
   const filterOptions = ["BedSide Table", "Chair"];
 
-  // Define colSpan and rowSpan patterns
-  const colSpanPattern = [1, 1, 1, 2, 1, 1, 2];
-  const rowSpanPattern = [2, 2, 2, 2, 2, 2, 2];
+  // Define colSpan and rowSpan patterns for desktop and mobile
+  const colSpanPatternDesktop = [1, 1, 1, 2, 1, 1, 2];
+  const rowSpanPatternDesktop = [2, 2, 2, 2, 2, 2, 2];
+
+  const colSpanPatternMobile = [2, 2, 2, 2, 2, 2];
+  const rowSpanPatternMobile = [1, 2, 1, 2, 1, 2];
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Detect mobile screens (768px breakpoint)
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Fetch products from API
   useEffect(() => {
@@ -31,17 +49,26 @@ export default function HomePageProducts() {
         }));
 
         setProducts(preparedProducts);
-        setFilteredProducts(applyGridPatterns(preparedProducts.slice(0, 7))); // Limit to 7 products initially
+        setFilteredProducts(
+          applyGridPatterns(preparedProducts.slice(0, 7), isMobile)
+        ); // Limit to 7 products initially
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [isMobile]);
 
   // Reapply grid patterns after filtering
-  const applyGridPatterns = (items) => {
+  const applyGridPatterns = (items, isMobile) => {
+    const colSpanPattern = isMobile
+      ? colSpanPatternMobile
+      : colSpanPatternDesktop;
+    const rowSpanPattern = isMobile
+      ? rowSpanPatternMobile
+      : rowSpanPatternDesktop;
+
     return items.map((product, index) => ({
       ...product,
       colSpan: colSpanPattern[index % colSpanPattern.length],
@@ -54,19 +81,21 @@ export default function HomePageProducts() {
     setSelectedFilter(filter);
 
     if (filter === "All") {
-      setFilteredProducts(applyGridPatterns(products.slice(0, 7))); // Limit to 7 products
+      setFilteredProducts(applyGridPatterns(products.slice(0, 7), isMobile)); // Limit to 7 products
     } else {
       const filtered = products.filter((product) =>
         product.category.toLowerCase().includes(filter.toLowerCase())
       );
-      setFilteredProducts(applyGridPatterns(filtered.slice(0, 7))); // Limit to 7 filtered products
+      setFilteredProducts(
+        applyGridPatterns(filtered.slice(0, 7), isMobile) // Limit to 7 filtered products
+      );
     }
   };
 
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col px-2 w-full items-center">
       {/* Filter Buttons */}
-      <div className="flex justify-end gap-3 w-full mb-4">
+      <div className="flex justify-end gap-3 px-4 w-full mb-4">
         <Link to="/product-list">
           <motion.button
             className="px-4 py-2 text-xl tracking-wider font-bold rounded-lg shadow-md"
@@ -94,9 +123,21 @@ export default function HomePageProducts() {
           </motion.button>
         ))}
       </div>
-
-      {/* Product Cards */}
-      <ProductCard products={filteredProducts} />
+      <div
+        className="w-full flex flex-col justify-center  md:grid gap-8 p-2 md:p-4"
+        style={
+          isMobile
+            ? { gridTemplateColumns: "1fr" }
+            : {
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridAutoRows: "150px",
+              }
+        }
+      >
+        {/* Product Cards */}
+        <ProductCard products={filteredProducts} />
+      </div>
     </div>
   );
 }

@@ -38,14 +38,7 @@ export default function ProductCard({ products }) {
   };
 
   return (
-    <div
-      className="w-full grid gap-8  p-4"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gridAutoRows: "150px",
-      }}
-    >
+    <>
       {products.map((product, index) => (
         <div
           key={index}
@@ -89,7 +82,7 @@ export default function ProductCard({ products }) {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }
 ProductCard.propTypes = {

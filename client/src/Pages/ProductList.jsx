@@ -4,7 +4,7 @@ import Products from "../Components/Products";
 
 export default function ProductList() {
   return (
-    <div className="w-full flex flex-col items-center h-full ">
+    <div className="w-full flex flex-col p-4 items-center h-full ">
       <div
         className="w-full h-[400px] relative rounded-2xl"
         style={{
