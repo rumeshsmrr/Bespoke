@@ -20,6 +20,7 @@ export default {
       },
       fontFamily: {
         primaryFont: ["primaryFont", "serif"],
+        secondaryFont: ["secondaryFont", "sans-serif"],
       },
     },
   },

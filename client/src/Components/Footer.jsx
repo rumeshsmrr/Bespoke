@@ -60,9 +60,9 @@ export default function Footer() {
         </div>
 
         {/* Center Section */}
-        <div className="mt-8 md:mt-0 flex flex-col items-center md:items-start">
-          <h3 className="text-xl font-semibold mb-4">Navigate</h3>
-          <ul className="space-y-2 text-lg">
+        <div className="mt-8 md:mt-0 flex flex-col items-center md:items-start font-secondaryFont">
+          <h3 className="text-md font-semibold mb-4">Navigate</h3>
+          <ul className="space-y-2 text-sm">
             {navigation.map((item, index) => (
               <li key={index}>
                 <Link to={item.link} className="hover:underline">
@@ -74,11 +74,11 @@ export default function Footer() {
         </div>
 
         {/* Right Section */}
-        <div className="mt-8 md:mt-0 flex flex-col items-center md:items-start">
-          <h3 className="text-xl tracking-wider font-semibold mb-4">
+        <div className="mt-8 md:mt-0 flex flex-col items-center md:items-start font-secondaryFont">
+          <h3 className="text-md tracking-wider font-semibold mb-4">
             Social Media
           </h3>
-          <ul className="space-y-2 text-lg">
+          <ul className="space-y-2 text-sm">
             {social.map((item, index) => (
               <li key={index}>
                 <a
