@@ -5,6 +5,7 @@ const {
   deleteProduct,
   getSingleProduct,
   getSuggestedProducts,
+  getNewProduct,
 } = require("../Ctrls/ProductCtrl");
 const upload = require("../utils/multer");
 
@@ -16,6 +17,7 @@ router.post("/create", upload.array("images", 5), createProduct); // Max 5 image
 // Get All Products
 router.get("/", getProducts);
 
+router.get("/newProduct", getNewProduct);
 // Delete Product
 router.delete("/:id", deleteProduct);
 
