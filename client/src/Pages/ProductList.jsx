@@ -14,7 +14,7 @@ export default function ProductList() {
         }}
       >
         <div className="w-full h-full bg-black rounded-3xl opacity-30 absolute"></div>
-        <div className="w-[30rem] h-fill absolute right-8 bottom-16 text-right text-primary text-7xl">
+        <div className="md:w-[30rem] h-fill absolute right-8 bottom-16 text-right text-wrap text-primary text-5xl md:text-7xl">
           Discover Bespoke Elegance
         </div>
       </div>
