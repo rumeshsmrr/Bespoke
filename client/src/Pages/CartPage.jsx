@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PayButton from "../Components/PayButton";
 
 export default function CartPage() {
   const [cart, setCart] = useState(null); // Cart data
@@ -94,9 +95,14 @@ export default function CartPage() {
             placeholder="Add a note to your order"
             rows={4}
           ></textarea>
-          <button className="mt-4 px-6 py-2 bg-secondary-100 text-white rounded-lg hover:bg-primary hover:text-secondary-100">
-            Checkout
-          </button>
+          <PayButton
+            embedURL="https://app.payhere.co/altlabs/coffee"
+            amountInCents={Math.round(cart.totalPrice * 100)}
+            currency="USD"
+            customerName="Customer Name"
+            customerEmail="customer@example.com"
+            customFields={{ orderId: cart._id }}
+          />
         </div>
       </div>
       {/* Footer Message */}

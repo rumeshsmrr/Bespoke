@@ -8,3 +8,10 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "secondaryFont";
+  src: url("../src/assets/Fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}

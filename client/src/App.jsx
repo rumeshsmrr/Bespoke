@@ -21,6 +21,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
+      <div id="payhere-modal"></div>
     </>
   );
 }
