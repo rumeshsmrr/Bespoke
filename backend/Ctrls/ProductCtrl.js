@@ -154,3 +154,13 @@ exports.getSuggestedProducts = async (req, res) => {
     res.status(500).json({ message: error.message || "Internal server error" });
   }
 };
+
+exports.getNewProduct = async (req, res) => {
+  try {
+    const newProducts = await Product.find().sort({ createdAt: -1 }).limit(1);
+    res.status(200).json(newProducts);
+  } catch (error) {
+    console.error("Error fetching new products:", error);
+    res.status(500).json({ message: error.message || "Internal server error" });
+  }
+};
