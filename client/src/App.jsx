@@ -4,6 +4,7 @@ import Home from "./Pages/Home";
 import ProductList from "./Pages/ProductList";
 import ProductDescription from "./Pages/ProductDescription";
 import CartPage from "./Pages/CartPage";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           />
           <Route path="/cart" element={<CartPage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );
