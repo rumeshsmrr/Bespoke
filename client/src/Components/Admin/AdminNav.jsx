@@ -25,10 +25,12 @@ export default function AdminNav() {
           <FaTh />
           Dashboard
         </button>
-        <button className="flex items-center gap-2 px-4 py-2 border-2 border-secondary-100 rounded-full hover:bg-secondary-100 hover:text-primary transition">
-          <FaClipboardList />
-          Inventory
-        </button>
+        <Link to={"/adminInventory"}>
+          <button className="flex items-center gap-2 px-4 py-2 border-2 border-secondary-100 rounded-full hover:bg-secondary-100 hover:text-primary transition">
+            <FaClipboardList />
+            Inventory
+          </button>
+        </Link>
         <Link to={"/adminProduct"}>
           <button className="flex items-center gap-2 px-4 py-2 border-2 border-secondary-100 rounded-full hover:bg-secondary-100 hover:text-primary transition">
             <FaBoxOpen />

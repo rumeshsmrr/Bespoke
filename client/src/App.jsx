@@ -7,6 +7,7 @@ import CartPage from "./Pages/CartPage";
 import Footer from "./Components/Footer";
 
 import ProductAdding from "./Pages/Admin/ProductAdding";
+import Inventory from "./Pages/Admin/Inventory";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/adminProduct" element={<ProductAdding />} />
+          <Route path="/adminInventory" element={<Inventory />} />
         </Routes>
         <Footer />
       </BrowserRouter>
