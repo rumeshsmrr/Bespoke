@@ -6,6 +6,8 @@ import ProductDescription from "./Pages/ProductDescription";
 import CartPage from "./Pages/CartPage";
 import Footer from "./Components/Footer";
 
+import ProductAdding from "./Pages/Admin/ProductAdding";
+
 function App() {
   return (
     <>
@@ -18,6 +20,7 @@ function App() {
             element={<ProductDescription />}
           />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/adminProduct" element={<ProductAdding />} />
         </Routes>
         <Footer />
       </BrowserRouter>
