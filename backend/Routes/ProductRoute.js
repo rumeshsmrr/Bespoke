@@ -6,6 +6,7 @@ const {
   getSingleProduct,
   getSuggestedProducts,
   getNewProduct,
+  updateProduct,
 } = require("../Ctrls/ProductCtrl");
 const upload = require("../utils/multer");
 
@@ -26,5 +27,8 @@ router.get("/:id", getSingleProduct);
 
 //get product by category
 router.get("/Suggestion/:category", getSuggestedProducts);
+
+// Update Product
+router.put("/:id", upload.array("images", 5), updateProduct); // Max 5 images
 
 module.exports = router;

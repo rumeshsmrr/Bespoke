@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { FaPen, FaTrash, FaPlus } from "react-icons/fa";
+import { FaPen, FaTrash } from "react-icons/fa";
 
 export default function ProductCardAdmin({ product, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -11,9 +11,30 @@ export default function ProductCardAdmin({ product, onDelete }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = () => {
-    console.log("Updated Product:", formData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5002/api/v1/products/${product._id}`,
+        {
+          method: "PUT", // Use PUT method for updates
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // Send updated form data
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message || "Product updated successfully.");
+        setIsEditing(false); // Exit editing mode
+      } else {
+        alert(data.message || "Failed to update product.");
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+      alert("An error occurred while updating the product.");
+    }
   };
 
   const handleCancel = () => {
@@ -38,7 +59,7 @@ export default function ProductCardAdmin({ product, onDelete }) {
       const data = await response.json();
       if (response.ok) {
         alert(data.message || "Product deleted successfully.");
-        onDelete(product._id); // Notify parent component
+        onDelete(product._id); // Notify parent to remove the product
       } else {
         alert(data.message || "Failed to delete product.");
       }
@@ -100,6 +121,7 @@ export default function ProductCardAdmin({ product, onDelete }) {
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Edit Product</h2>
               <button
+                type="button"
                 onClick={handleCancel}
                 className="text-red-600 hover:text-red-800"
               >
@@ -117,25 +139,6 @@ export default function ProductCardAdmin({ product, onDelete }) {
                 onChange={handleInputChange}
                 className="border-2 border-secondary-100 rounded-lg p-2 w-full"
               />
-            </div>
-            <div className="mt-4">
-              <label className="block text-secondary-100 mb-2">
-                Product Images
-              </label>
-              <div className="flex gap-4 items-center">
-                {formData.images.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative flex flex-col items-center"
-                  >
-                    <img
-                      src={img.url}
-                      alt={`Product ${index}`}
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
-                  </div>
-                ))}
-              </div>
             </div>
             <div className="mt-4">
               <label className="block text-secondary-100 mb-2">
