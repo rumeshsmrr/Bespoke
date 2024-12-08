@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FaPen, FaTrash, FaPlus } from "react-icons/fa";
 
-export default function ProductCardAdmin({ product }) {
+export default function ProductCardAdmin({ product, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...product });
 
@@ -21,41 +21,30 @@ export default function ProductCardAdmin({ product }) {
     setIsEditing(false);
   };
 
-  const handleRemoveImage = (index) => {
-    const updatedImages = formData.images.filter((_, i) => i !== index);
-    setFormData({ ...formData, images: updatedImages });
-  };
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${product.name}"?`
+    );
+    if (!confirmDelete) return;
 
-  const handleAddImage = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        // Simulate image upload to a service like Cloudinary
-        const formDataToUpload = new FormData();
-        formDataToUpload.append("file", file);
-        formDataToUpload.append("upload_preset", "your_upload_preset"); // For Cloudinary
-
-        const response = await fetch(
-          "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
-          {
-            method: "POST",
-            body: formDataToUpload,
-          }
-        );
-        const data = await response.json();
-
-        if (response.ok) {
-          const newImage = { url: data.secure_url, public_id: data.public_id };
-          setFormData({
-            ...formData,
-            images: [...formData.images, newImage],
-          });
-        } else {
-          console.error("Error uploading image:", data.error);
+    try {
+      const response = await fetch(
+        `http://localhost:5002/api/v1/products/${product._id}`,
+        {
+          method: "DELETE",
         }
-      } catch (error) {
-        console.error("Error uploading image:", error);
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message || "Product deleted successfully.");
+        onDelete(product._id); // Notify parent component
+      } else {
+        alert(data.message || "Failed to delete product.");
       }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("An error occurred while deleting the product.");
     }
   };
 
@@ -96,7 +85,10 @@ export default function ProductCardAdmin({ product }) {
             >
               <FaPen />
             </button>
-            <button className="bg-secondary-100 text-white p-2 rounded-full hover:bg-red-700">
+            <button
+              onClick={handleDelete}
+              className="bg-secondary-100 text-white p-2 rounded-full hover:bg-red-700"
+            >
               <FaTrash />
             </button>
           </div>
@@ -141,27 +133,8 @@ export default function ProductCardAdmin({ product }) {
                       alt={`Product ${index}`}
                       className="w-20 h-20 object-cover rounded-lg"
                     />
-
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="bg-red-600 text-white px-2 py-1 mt-2 rounded-full"
-                    >
-                      <FaTrash />
-                    </button>
                   </div>
                 ))}
-                {formData.images.length < 3 && (
-                  <label className="cursor-pointer bg-secondary-100 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-                    <FaPlus /> Add Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleAddImage}
-                    />
-                  </label>
-                )}
               </div>
             </div>
             <div className="mt-4">
@@ -223,4 +196,5 @@ export default function ProductCardAdmin({ product }) {
 
 ProductCardAdmin.propTypes = {
   product: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
